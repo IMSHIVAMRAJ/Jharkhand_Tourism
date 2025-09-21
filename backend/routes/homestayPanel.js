@@ -4,17 +4,20 @@ const upload = require("../middleware/multer");
 const {
   addHomestay,
   updateHomestay,
-  getHomestayDetails
+  getHomestayDetails,
+  getHomestayById
 } = require("../controllers/homestayPanelController");
 const { authOwner } = require("../middleware/authOwner");
-
+const cpUpload = upload.fields([
+  { name: 'thumbnailImage', maxCount: 1 },
+  { name: 'images', maxCount: 5 }
+]);
 // ✅ Add Homestay (multiple images)
-router.post("/add", authOwner, upload.array("gallery", 5), addHomestay);
+router.post("/", authOwner, cpUpload, addHomestay);
 
 // ✅ Update Homestay
-router.put("/:id", authOwner, upload.array("gallery", 5), updateHomestay);
-
+router.put("/:id", authOwner, cpUpload, updateHomestay);
+router.get("/",getHomestayDetails)
 // ✅ Get Homestay Details
-router.get("/:id", getHomestayDetails);
-
+router.get('/:id', getHomestayById);
 module.exports = router;

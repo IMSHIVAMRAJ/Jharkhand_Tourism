@@ -13,7 +13,7 @@ const homestayRoutes = require("./routes/homestay");
 const homestaysRoutes = require("./routes/homestayPanel");
 const bookingRoutes = require("./routes/booking");
 const handicraftOwnerRoutes = require("./routes/handicraftOwnerRoutes");
-
+const homestayOwnerRoutes = require('./routes/homestayOwnerRoutes');
 const app = express();
 
 // --- Middleware ---
@@ -29,10 +29,10 @@ app.use('/api/kyc', kycRoutes);
 app.use('/api/handicrafts', handicraftRoutes);
 app.use("/api/guides", guideRoutes);
 app.use("/api/homestay", homestayRoutes);
-app.use("/api/homestay-panel", homestaysRoutes);
+app.use("/api/homestays", homestaysRoutes);
 app.use("/api/booking", bookingRoutes);
 app.use("/api/handicraft-owners", handicraftOwnerRoutes);
-
+app.use('/api/homestay-owners', homestayOwnerRoutes);
 
 const PORT = process.env.PORT || 5000;
 

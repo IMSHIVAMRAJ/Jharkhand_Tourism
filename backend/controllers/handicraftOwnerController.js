@@ -44,6 +44,15 @@ exports.registerOwner = async (req, res) => {
   }
 };
 
+exports.getAllOwners = async (req, res) => {
+  try {
+    // Find all owners and exclude their password field from the result
+    const owners = await HandicraftOwner.find().select("-password");
+    res.json(owners);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
 
 exports.loginOwner = async (req, res) => {
   try {

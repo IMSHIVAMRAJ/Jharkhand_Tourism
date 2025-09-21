@@ -37,6 +37,17 @@ exports.applyHomestayOwner = async (req, res) => {
 };
 
 
+exports.getAllHomestayOwners = async (req, res) => {
+  try {
+    // This correctly finds all documents in the HomestayOwner collection
+    const owners = await HomestayOwner.find().select("-password");
+    res.json(owners);
+  } catch (err) {
+    // If this fails, it will send a 500 error with a clear message
+    res.status(500).json({ message: "Server error while fetching owners.", error: err.message });
+  }
+};
+
 // ✅ Get pending applications (Admin only)
 exports.getPendingOwners = async (req, res) => {
   try {
@@ -47,39 +58,26 @@ exports.getPendingOwners = async (req, res) => {
   }
 };
 
-// ✅ Approve Owner → hash password
+// ✅ Approve Owner → hash password// Approves an owner
 exports.approveOwner = async (req, res) => {
   try {
-    const owner = await HomestayOwner.findById(req.params.id);
+    const owner = await HomestayOwner.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
     if (!owner) return res.status(404).json({ message: "Owner not found" });
-
-    // hash password now
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(owner.password, salt);
-
-    owner.password = hashedPassword;
-    owner.status = "approved";
-    await owner.save();
-
-    res.json({ message: "Homestay owner approved", owner });
+    res.json({ message: "Owner approved", owner });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// ✅ Reject Owner
+// Rejects an owner
 exports.rejectOwner = async (req, res) => {
-  try {
-    const owner = await HomestayOwner.findByIdAndUpdate(
-      req.params.id,
-      { status: "rejected" },
-      { new: true }
-    );
-    if (!owner) return res.status(404).json({ message: "Owner not found" });
-    res.json({ message: "Application rejected", owner });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const owner = await HomestayOwner.findByIdAndUpdate(req.params.id, { status: 'rejected' }, { new: true });
+        if (!owner) return res.status(404).json({ message: "Owner not found" });
+        res.json({ message: "Owner rejected", owner });
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
 };
 
 // ✅ Owner Login (after approval)

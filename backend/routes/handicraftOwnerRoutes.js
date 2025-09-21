@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { registerOwner, loginOwner, approveOwner, rejectOwner } = require("../controllers/handicraftOwnerController");
+const { registerOwner, loginOwner, approveOwner, rejectOwner, getAllOwners } = require("../controllers/handicraftOwnerController");
 const upload = require("../middleware/multer");
 const adminMiddleware = require("../middleware/adminMiddleware");
 
@@ -9,9 +9,9 @@ router.post("/register", upload.single("certificate"), registerOwner);
 
 // Login
 router.post("/login", loginOwner);
-
+router.get("/", adminMiddleware, getAllOwners);
 // Approve/Reject by admin
-router.post("/approve/:id",adminMiddleware, approveOwner);
-router.post("/reject/:id",adminMiddleware, rejectOwner);
+router.put("/approve/:id",adminMiddleware, approveOwner);
+router.delete("/reject/:id",adminMiddleware, rejectOwner);
 
 module.exports = router;

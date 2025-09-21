@@ -6,7 +6,8 @@ const {
   getPendingOwners,
   approveOwner,
   rejectOwner,
-  loginOwner
+  loginOwner,
+  getAllHomestayOwners
 } = require("../controllers/homestayController");
 const adminMiddleware = require("../middleware/adminMiddleware");
 
@@ -17,9 +18,11 @@ router.post("/login", loginOwner);
 
 // ✅ Admin check pending
 router.get("/pending",adminMiddleware, getPendingOwners);
+router.get("/", adminMiddleware, getAllHomestayOwners);
 
-// ✅ Admin approve/reject
-router.put("/:id/approve",adminMiddleware, approveOwner);
-router.put("/:id/reject",adminMiddleware, rejectOwner);
+// PUT /api/homestay-owners/:id/approve
+router.put("/:id/approve", adminMiddleware, approveOwner);
 
+// PUT /api/homestay-owners/:id/reject
+router.put("/:id/reject", adminMiddleware, rejectOwner);
 module.exports = router;

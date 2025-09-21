@@ -12,6 +12,7 @@ exports.createBooking = async (req, res) => {
       email,
       mobile,
       address,
+      bookingDates,
     } = req.body;
 
     const booking = new Booking({
@@ -21,6 +22,7 @@ exports.createBooking = async (req, res) => {
       adults,
       firstName,
       lastName,
+      bookingDates,
       email,
       mobile,
       address,

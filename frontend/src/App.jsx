@@ -11,7 +11,11 @@ import Gallery from './pages/JharkhandGallery';
 import Homestay from './components/Homestay.jsx';
 import HomestayDetail from './pages/HomestayDetail';
 import Apply from './components/Apply';
+import MainRoutes from './Routes/MainRoutes';
+import ApplyHomestayPage from './pages/ApplyHomestay';
+import ApplyHandicraftPage from './pages/ApplyHandicraft';
 import './App.css';
+import GuideApplyForm from './pages/GuideApplyForm.jsx';
 
 function App() {
   return (
@@ -31,8 +35,13 @@ function App() {
             <Route path="/homestay/:homestayId" element={<HomestayDetail />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/apply" element={<Apply />} />
+            <Route path="/apply-homestay" element={<ApplyHomestayPage />} />
+            <Route path="/apply-handicraft" element={<ApplyHandicraftPage />} />
+            <Route path="/apply-guide" element={<GuideApplyForm />} />
+
           </Routes>
         </main>
+          <MainRoutes />
         <Footer />
       </div>
     </Router>
