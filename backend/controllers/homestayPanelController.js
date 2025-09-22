@@ -136,3 +136,62 @@ exports.getHomestayById = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+exports.updateHomestay = async (req, res) => {
+    try {
+        const homestay = await Homestay.findById(req.params.id);
+        if (!homestay) return res.status(404).json({ error: "Homestay not found" });
+        if (homestay.owner.toString() !== req.user.id) {
+            return res.status(403).json({ error: "Unauthorized" });
+        }
+
+        const data = { ...req.body };
+        
+        // Update text and JSON fields
+        Object.keys(data).forEach(key => {
+            if (['rooms', 'policies', 'facilities', 'amenities', 'nearbyAttractions'].includes(key)) {
+                homestay[key] = data[key] ? JSON.parse(data[key]) : homestay[key];
+            } else {
+                homestay[key] = data[key];
+            }
+        });
+
+        // Handle updated file uploads
+        if (req.files) {
+            if (req.files.thumbnailImage) {
+                const thumbResult = await cloudinary.uploader.upload(req.files.thumbnailImage[0].path, { folder: "homestay_thumbnails" });
+                homestay.thumbnailImage = thumbResult.secure_url;
+                fs.unlinkSync(req.files.thumbnailImage[0].path);
+            }
+            if (req.files.images && req.files.images.length > 0) {
+                let galleryUrls = [];
+                for (let file of req.files.images) {
+                    const result = await cloudinary.uploader.upload(file.path, { folder: "homestay_gallery" });
+                    galleryUrls.push(result.secure_url);
+                    fs.unlinkSync(file.path);
+                }
+                homestay.images = galleryUrls; // Replace gallery
+            }
+        }
+
+        await homestay.save();
+        res.json({ message: "Homestay updated successfully", homestay });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+// ✅ FULLY WORKING Delete Homestay function
+exports.deleteHomestay = async (req, res) => {
+    try {
+        const homestay = await Homestay.findById(req.params.id);
+        if (!homestay) return res.status(404).json({ error: "Homestay not found" });
+        if (homestay.owner.toString() !== req.user.id) {
+            return res.status(403).json({ error: "Unauthorized" });
+        }
+        
+        await homestay.deleteOne(); // Use deleteOne() instead of remove()
+        res.json({ message: "Homestay deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

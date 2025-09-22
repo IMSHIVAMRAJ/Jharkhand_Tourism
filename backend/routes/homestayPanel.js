@@ -5,7 +5,8 @@ const {
   addHomestay,
   updateHomestay,
   getHomestayDetails,
-  getHomestayById
+  getHomestayById,
+  deleteHomestay
 } = require("../controllers/homestayPanelController");
 const { authOwner } = require("../middleware/authOwner");
 const cpUpload = upload.fields([
@@ -20,4 +21,5 @@ router.put("/:id", authOwner, cpUpload, updateHomestay);
 router.get("/",getHomestayDetails)
 // ✅ Get Homestay Details
 router.get('/:id', getHomestayById);
+router.delete("/:id",authOwner, deleteHomestay);
 module.exports = router;

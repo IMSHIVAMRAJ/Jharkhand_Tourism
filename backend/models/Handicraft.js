@@ -22,7 +22,7 @@ const handicraftSchema = new mongoose.Schema({
     shop_name: { type: String, required: true },
     address: { type: String, required: true },
     description: { type: String }, // Shop-level description
-    status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+    status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'approved' },
     
     // An array of product sub-documents
     products: [productSubSchema] 
