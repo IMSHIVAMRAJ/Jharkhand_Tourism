@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -11,23 +13,37 @@ import Gallery from './pages/JharkhandGallery';
 import Homestay from './components/Homestay.jsx';
 import HomestayDetail from './pages/HomestayDetail';
 import Apply from './components/Apply';
-import MainRoutes from './Routes/MainRoutes';
 import ApplyHomestayPage from './pages/ApplyHomestay';
 import ApplyHandicraftPage from './pages/ApplyHandicraft';
-import './App.css';
 import GuideApplyForm from './pages/GuideApplyForm.jsx';
+import ApplicationBot from "./components/ApplicationBot";
+import Chatbot from "./components/Chatbot";
+import './App.css';
+
+// Ensure you have these components imported correctly if they are part of your project
+// import MainRoutes from './Routes/MainRoutes'; 
 
 function App() {
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [isApplicationBotOpen, setIsApplicationBotOpen] = useState(false);
+
+  const handleOpenApplicationForm = () => {
+    setIsApplicationBotOpen(true);
+  };
+
+  const handleCloseApplicationForm = () => {
+    setIsApplicationBotOpen(false);
+  };
+
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
-        <main>
+        <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/explore" element={<ExplorePage />} />
-            {/* This is the key route for the explore cards */}
             <Route path="/explore/:destinationId" element={<DestinationPage />} />
             <Route path="/category/:categoryId" element={<CategoryPage />} />
             <Route path="/marketplace" element={<Marketplace />} />
@@ -38,11 +54,25 @@ function App() {
             <Route path="/apply-homestay" element={<ApplyHomestayPage />} />
             <Route path="/apply-handicraft" element={<ApplyHandicraftPage />} />
             <Route path="/apply-guide" element={<GuideApplyForm />} />
-
+            {/* The MainRoutes component was removed to avoid duplicate routing issues */}
+            {/* You should manually add the routes from MainRoutes here if they are needed */}
           </Routes>
         </main>
-          <MainRoutes />
         <Footer />
+
+        {/* Render the application bot */}
+        <ApplicationBot 
+          isOpen={isApplicationBotOpen}
+          onClose={handleCloseApplicationForm}
+          onOpen={handleOpenApplicationForm}
+        />
+        
+        {/* Render the main chatbot */}
+        <Chatbot 
+          isOpen={isChatbotOpen} 
+          setIsOpen={setIsChatbotOpen}
+          onOpenApplicationForm={handleOpenApplicationForm}
+        />
       </div>
     </Router>
   );

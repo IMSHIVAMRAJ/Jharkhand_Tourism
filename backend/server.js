@@ -40,7 +40,7 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
     try {
         await connectMongo();
-        await sequelize.sync();   // Auto-create MySQL tables if not present
+        // await sequelize.sync();   // Auto-create MySQL tables if not present
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     } catch (error) {
         console.error('Server failed to start:', error);
