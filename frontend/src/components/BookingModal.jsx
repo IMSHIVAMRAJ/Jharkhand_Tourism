@@ -1,20 +1,75 @@
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import DatePicker from 'react-datepicker';
+import React, { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
+import { Loader } from "lucide-react";
+import { ethers } from "ethers";
+import abi from "../utils/abi.json";
+import { useNavigate } from "react-router-dom";
+
+const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
 
 // CORRECTED FUNCTION
 const getAuthToken = () => {
-    return localStorage.getItem('token'); // Use the correct key 'token'
+  return localStorage.getItem("token"); // Use the correct key 'token'
 };
 
 const BookingModal = ({ homestay, onClose }) => {
+  const navigate = useNavigate();
   const { register, handleSubmit, control } = useForm();
-  const [serverError, setServerError] = useState('');
+  const [serverError, setServerError] = useState("");
+  const [bookingId, setBookingId] = useState("");
+
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleCreateBooking = async (providerAddress) => {
+    if (!providerAddress) return alert("Enter provider address");
+
+    try {
+      setIsProcessing(true);
+
+      // Step 1: Check if MetaMask is installed
+      if (!window.ethereum) {
+        alert("MetaMask not installed");
+        return;
+      }
+
+      // Step 2: Connect wallet (wait for user approval)
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      if (!accounts || accounts.length === 0) {
+        alert("Wallet connection failed");
+        return;
+      }
+
+      // Step 3: Get signer
+      const signer = await provider.getSigner();
+
+      // Step 4: Create contract instance
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+
+      // Step 5: Send transaction to create booking
+      const tx = await contract.createBooking(providerAddress, {
+        value: ethers.parseEther("0.01"), // adjust amount as needed
+      });
+      await tx.wait();
+
+      alert("Booking created and payment sent!");
+
+      // Step 6: Get the new booking ID
+      const newBookingId = await contract.bookingCount();
+      setBookingId(newBookingId.toString());
+    } catch (err) {
+      console.error(err);
+      alert("Transaction failed: " + (err?.message || err));
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const onSubmit = async (data) => {
-    setServerError('');
+    setServerError("");
     const token = getAuthToken();
 
     if (!token) {
@@ -23,13 +78,13 @@ const BookingModal = ({ homestay, onClose }) => {
     }
 
     // This logic formats the date correctly for the backend if a range is selected
-    let bookingDatesString = '';
+    let bookingDatesString = "";
     if (data.bookingDate && data.bookingDate[0] && data.bookingDate[1]) {
-        const startDate = data.bookingDate[0].toLocaleDateString('en-CA'); // yyyy-mm-dd format
-        const endDate = data.bookingDate[1].toLocaleDateString('en-CA');
-        bookingDatesString = `${startDate} to ${endDate}`;
+      const startDate = data.bookingDate[0].toLocaleDateString("en-CA"); // yyyy-mm-dd format
+      const endDate = data.bookingDate[1].toLocaleDateString("en-CA");
+      bookingDatesString = `${startDate} to ${endDate}`;
     } else if (data.bookingDate && data.bookingDate[0]) {
-        bookingDatesString = data.bookingDate[0].toLocaleDateString('en-CA');
+      bookingDatesString = data.bookingDate[0].toLocaleDateString("en-CA");
     }
 
     const bookingPayload = {
@@ -40,31 +95,93 @@ const BookingModal = ({ homestay, onClose }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/booking/create', {
-        method: 'POST',
+
+      setIsProcessing(true);
+
+      // Step 1: Check if MetaMask is installed
+      if (!window.ethereum) {
+        alert("MetaMask not installed");
+        return;
+      }
+
+      // Step 2: Connect wallet (wait for user approval)
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      if (!accounts || accounts.length === 0) {
+        alert("Wallet connection failed");
+        return;
+      }
+
+      // Step 3: Get signer
+      const signer = await provider.getSigner();
+
+      // Step 4: Create contract instance
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+
+      // Step 5: Send transaction to create booking
+      const tx = await contract.createBooking(homestay.paymentId, {
+        value: ethers.parseEther("0.01"), // adjust amount as needed
+      });
+      await tx.wait();
+
+      alert("Booking created and payment sent!");
+
+      // Step 6: Get the new booking ID
+      const newBookingId = await contract.bookingCount();
+      setBookingId(newBookingId.toString());
+      
+      const response = await fetch("http://localhost:5000/api/booking/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(bookingPayload),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Booking failed.');
-      
-      alert('Booking successful!');
-      onClose();
+      if (!response.ok) throw new Error(result.error || "Booking failed.");
 
+      alert("Booking successful!");
+      onClose();
+      navigate('/homestay')
     } catch (error) {
       setServerError(error.message);
+    } finally{
+      setIsProcessing(false);
     }
   };
 
+  // useEffect(()=>{
+  //     if (loading) {
+  //     return (
+  //       <div className="min-h-screen flex items-center justify-center">
+  //         <Loader className="w-12 h-12 animate-spin text-green-600" />
+  //       </div>
+  //     );
+  //   }
+  // },[])
+
+  // if (loading) {
+  //     return (
+  //       <div className="min-h-screen flex items-center justify-center">
+  //         <Loader className="w-12 h-12 animate-spin text-green-600" />
+  //       </div>
+  //     );
+  //   }
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-opacity-60 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-4 border-b flex items-center justify-between sticky top-0 bg-white">
-          <h2 className="text-xl font-bold text-gray-800">Confirm Your Booking</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-800"><X /></button>
+          <h2 className="text-xl font-bold text-gray-800">
+            Confirm Your Booking
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-800"
+          >
+            <X />
+          </button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
@@ -74,12 +191,35 @@ const BookingModal = ({ homestay, onClose }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input {...register("firstName", { required: true })} placeholder="First Name" className="w-full p-2 border rounded" />
-            <input {...register("lastName", { required: true })} placeholder="Last Name" className="w-full p-2 border rounded" />
-            <input type="email" {...register("email", { required: true })} placeholder="Email Address" className="w-full p-2 border rounded" />
-            <input type="tel" {...register("mobile", { required: true })} placeholder="Mobile Number" className="w-full p-2 border rounded" />
-            <input type="number" {...register("adults", { required: true, min: 1 })} placeholder="Number of Adults" className="w-full p-2 border rounded" />
-            
+            <input
+              {...register("firstName", { required: true })}
+              placeholder="First Name"
+              className="w-full p-2 border rounded"
+            />
+            <input
+              {...register("lastName", { required: true })}
+              placeholder="Last Name"
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="email"
+              {...register("email", { required: true })}
+              placeholder="Email Address"
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="tel"
+              {...register("mobile", { required: true })}
+              placeholder="Mobile Number"
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="number"
+              {...register("adults", { required: true, min: 1 })}
+              placeholder="Number of Adults"
+              className="w-full p-2 border rounded"
+            />
+
             <div>
               <Controller
                 control={control}
@@ -101,14 +241,23 @@ const BookingModal = ({ homestay, onClose }) => {
               />
             </div>
           </div>
-          
-          <textarea {...register("address", { required: true })} placeholder="Full Address" rows="3" className="w-full p-2 border rounded" />
-          
+
+          <textarea
+            {...register("address", { required: true })}
+            placeholder="Full Address"
+            rows="3"
+            className="w-full p-2 border rounded"
+          />
+
           {serverError && <p className="text-sm text-red-500">{serverError}</p>}
-          
+
           <div className="flex justify-end pt-4 border-t">
-            <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold">
-              Confirm Booking
+            <button
+              type="submit"
+              disabled={isProcessing}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold"
+            >
+              {isProcessing ? "Waiting.. " : "Confirm"}
             </button>
           </div>
         </form>

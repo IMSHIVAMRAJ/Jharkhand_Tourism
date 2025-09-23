@@ -21,7 +21,7 @@ import './App.css';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import MainRoutes from './Routes/MainRoutes.jsx';
-
+import KYCForm from './pages/KYCForm.jsx';
 // Ensure you have these components imported correctly if they are part of your project
 // import MainRoutes from './Routes/MainRoutes'; 
 
@@ -60,6 +60,8 @@ function App() {
             {/* You should manually add the routes from MainRoutes here if they are needed */}
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/KYCFORM" element={<KYCForm />} />
+
             {/* Add other routes as needed */}
           </Routes>
         </main>

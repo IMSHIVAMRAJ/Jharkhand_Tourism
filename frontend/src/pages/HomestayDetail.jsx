@@ -42,7 +42,7 @@ const HomestayDetail = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50">
+      <div className={`min-h-screen bg-gray-50 transition-all duration-300 ${showBookingModal ? 'blur-sm pointer-events-none' : ''}`}>
         <div className="bg-white shadow-sm border-b">
           <div className="container mx-auto px-4 py-4">
             <Link to="/homestay" className="inline-flex items-center text-green-600 hover:text-green-700 font-medium">
