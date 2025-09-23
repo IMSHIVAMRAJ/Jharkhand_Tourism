@@ -296,27 +296,29 @@ const HeroSection = () => {
 };
 
 
-const SocialMedia = () => (
-  <section className="py-16">
-    <div className="container mx-auto px-4">
-      <h2 className="text-3xl font-bold text-center mb-12">Follow Us</h2>
-      <div className="flex justify-center space-x-6">
-        <a href="#" className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors">
-          <span className="text-lg font-semibold">f</span>
-        </a>
-        <a href="#" className="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition-colors">
-          <span className="text-lg font-semibold">t</span>
-        </a>
-        <a href="#" className="bg-pink-500 text-white p-3 rounded-full hover:bg-pink-600 transition-colors">
-          <span className="text-lg font-semibold">i</span>
-        </a>
-        <a href="#" className="bg-red-600 text-white p-3 rounded-full hover:bg-red-700 transition-colors">
-          <span className="text-lg font-semibold">y</span>
-        </a>
-      </div>
-    </div>
-  </section>
-);
+// const SocialMedia = () => (
+//   <section className="py-16">
+//     <div className="container mx-auto px-4">
+//       <h2 className="text-3xl font-bold text-center mb-12">Follow Us</h2>
+//       <div className="flex justify-center space-x-6">
+//         <a href="#" className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors">
+//           <span className="text-lg font-semibold">f</span>
+//         </a>
+//         <a href="#" className="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition-colors">
+//           <span className="text-lg font-semibold">t</span>
+//         </a>
+//         <a href="#" className="bg-pink-500 text-white p-3 rounded-full hover:bg-pink-600 transition-colors">
+//           <span className="text-lg font-semibold">i</span>
+//         </a>
+//         <a href="#" className="bg-red-600 text-white p-3 rounded-full hover:bg-red-700 transition-colors">
+//           <span className="text-lg font-semibold">y</span>
+//         </a>
+//       </div>
+//     </div>
+//   </section>
+// );
+import SocialMedia from '../pages/FollowUs';
+
 
 const Home = () => {
   return (
@@ -329,7 +331,7 @@ const Home = () => {
       <PhotoVideoGallery />
       <PrideOfJharkhand />
       <TouristTestimonials />
-      <SocialMedia />
+      <SocialMedia/>
     </div>
   );
 };

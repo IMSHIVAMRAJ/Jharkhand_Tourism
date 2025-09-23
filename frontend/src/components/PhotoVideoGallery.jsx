@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Play, Heart, Share2, Download, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import galleryBg from '../assets/gallery-bg.jpg';
+import destination1 from '../assets/destination1.jpg';
+import destination2 from '../assets/destination2.jpg';
+import destination3 from '../assets/destination3.jpg';
+
 
 const PhotoVideoGallery = () => {
   const [selectedMedia, setSelectedMedia] = useState(null);
@@ -10,14 +14,14 @@ const PhotoVideoGallery = () => {
     {
       id: 1,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
+      src: destination1,
       title: 'Mountain Landscape',
       location: 'Himalayas, India'
     },
     {
       id: 2,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop',
+      src: destination2,
       title: 'Forest Trail',
       location: 'Western Ghats, India'
     },

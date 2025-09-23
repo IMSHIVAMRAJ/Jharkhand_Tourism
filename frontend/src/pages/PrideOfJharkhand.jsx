@@ -1,73 +1,79 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import medle from "../assets/medle.jpg"
+import galleryBg from '../assets/gallery-bg.jpg'; 
+import prideArjun from '../assets/prideArjunMunda.png';
+import prideBalbar from '../assets/prideBalbirDutt.png';
+import prideDeepikaKumari from '../assets/prideDeepikaKumari.png';
+import prideDhoni from '../assets/prideDhoni.png';
+import prideJaipal from '../assets/prideJaipalSinghMunda.png';
+import prideLaxmiPadiya from '../assets/prideLakshmi.png';
+import prideLanceNaikAlbertEkka from '../assets/prideLanceNaikAlbertEkka.png';
+import prideMadhumitaKumari from '../assets/prideMadhumitaKumari.png';
+import pridePurnimaMahato from '../assets/pridePurnimaMahato.png';
+
+// import galleryBg from '../assets/galleryBg.jpg'
 
 // Sample data with placeholder images - replace these with your actual images
 const prideData = [
   {
     name: 'Mahendra Singh Dhoni',
     description: 'Legendary Indian cricketer and former captain, born in Ranchi. Known as Captain Cool for his calm demeanor and exceptional leadership skills.',
-    image: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    image: prideDhoni,
     category: 'Sports',
   },
   {
     name: 'Deepika Kumari',
     description: 'World-class archer, once ranked No. 1 globally. Multiple-time Olympian and World Championship medalist.',
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    image: prideDeepikaKumari,
     category: 'Sports',
   },
   {
     name: 'Arjun Munda',
     description: 'Union Minister of Tribal Affairs, born in Jamshedpur. Former Chief Minister of Jharkhand and prominent tribal leader.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    image: prideArjun,
     category: 'Politics',
   },
   {
     name: 'Madhumita Kumari',
     description: 'Asian Games silver medalist in compound archery. Rising star in Indian archery with multiple national records.',
-    image: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    image: prideMadhumitaKumari,
     category: 'Sports',
   },
   {
     name: 'Purnima Mahato',
     description: 'National archery champion and Commonwealth Games silver medalist. One of the most consistent performers in Indian archery.',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    image: pridePurnimaMahato,
     category: 'Sports',
   },
   {
     name: 'Birsa Munda',
     description: 'Revered tribal leader and freedom fighter who led the Ulgulan rebellion against British rule. Icon of tribal resistance.',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    image: prideArjun,
     category: 'History',
   },
   {
         name: 'Jaipal Singh Munda',
     description: 'Olympic gold medalist in hockey (1928) and a prominent tribal leader. He played a key role in the formation of Jharkhand and was a strong advocate for tribal rights.',
-    image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    image: prideJaipal,
     category: 'History',
   },
   {
     name: 'Lance Naik Albert Ekka',
     description: 'Param Vir Chakra awardee for bravery in the 1971 Indo-Pak war. His heroic sacrifice is commemorated at Albert Ekka Chowk in Ranchi.',
-    image: 'https://images.unsplash.com/photo-1605902711622-cfb43c4437d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    image: prideLanceNaikAlbertEkka,
     category: 'History',
-  },
-  {
-    name: 'Ashunta Lakra',
-    description: 'Indian women’s hockey player from Jharkhand. Known for her leadership and contribution to national and international tournaments.',
-    image: 'https://images.unsplash.com/photo-1605902711622-cfb43c4437d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    category: 'Sports',
   },
   {
     name: 'Laxmi Padiya',
     description: 'Boxer from Jharkhand who has represented India in various national and international competitions. A rising star in Indian boxing.',
-    image: 'https://images.unsplash.com/photo-1605902711622-cfb43c4437d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    image: prideLaxmiPadiya ,
     category: 'Sports',
   },
   {
     name: 'Balbir Dutt',
     description: 'Veteran journalist and founder-editor of the Hindi daily Deshpran. Known for his fearless reporting and contribution to media in Jharkhand.',
-    image: 'https://images.unsplash.com/photo-1605902711622-cfb43c4437d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    image: prideBalbar,
     category: 'Arts & Media',
   }
 ];
@@ -122,12 +128,12 @@ const PrideOfJharkhand = () => {
         <div className="w-32 h-1 bg-gradient-to-r from-yellow-500 to-green-600 mx-auto rounded-full"></div>
       </div>
       <div 
-        className="min-h-screen py-0 px-8 bg-cover bg-center"
+        className="min-h-160 py-8 px-8 bg-cover bg-center"
         style={{ backgroundImage: `url(${medle})` }}
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto ">
           {/* Carousel Container */}
-          <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-yellow-200">
+          <div className="relative backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-yellow-200">
             <div className="relative overflow-hidden rounded-2xl">
               {/* Carousel Track */}
               <div 
