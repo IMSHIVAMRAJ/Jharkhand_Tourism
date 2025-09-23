@@ -137,7 +137,7 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="relative w-screen h-screen bg-white">
+    <>
       {/* Toggle Button */}
       <motion.button
         whileTap={{ scale: 0.9 }}
@@ -232,7 +232,7 @@ const Chatbot = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 
