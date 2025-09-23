@@ -7,7 +7,7 @@ const fs = require("fs");
 // ✅ Apply Homestay Owner with file upload
 exports.applyHomestayOwner = async (req, res) => {
   try {
-    const { name, contact, email, password } = req.body;
+    const { name, contact, email, password, paymentId } = req.body;
 
     // Upload certificate to Cloudinary
     let certificateUrl = null;
@@ -25,7 +25,8 @@ exports.applyHomestayOwner = async (req, res) => {
       name,
       contact,
       email,
-      password,  // hash only after approval
+      password, 
+      paymentId, 
       certificate: certificateUrl,
     });
 

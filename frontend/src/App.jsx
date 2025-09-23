@@ -66,7 +66,7 @@ function App() {
         </main>
         <MainRoutes />
         <Footer />
-         
+
         {/* Render the application bot */}
         <ApplicationBot 
           isOpen={isApplicationBotOpen}

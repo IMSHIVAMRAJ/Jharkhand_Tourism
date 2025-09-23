@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { CheckCircle, XCircle, Info, Loader } from 'lucide-react';
 
 // ✅ CORRECTED AND SIMPLIFIED API URL
-const API_URL = 'http://localhost:5000/api/homestays';
+const API_URL = 'http://localhost:5000/api/homestay';
 
 const getAuthToken = () => localStorage.getItem('admin_token');
 
