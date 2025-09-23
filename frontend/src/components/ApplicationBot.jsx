@@ -11,9 +11,30 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submissionSuccess, setSubmissionSuccess] = useState(false)
+  const [theme, setTheme] = useState("water")
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
   const applicationBotRef = useRef(null)
+
+  // Define multiple themes for Jharkhand's natural beauty
+  const themes = [
+    { name: "water", bg: "bg-gradient-to-r from-blue-300 to-teal-200", text: "text-blue-800" },
+    { name: "mountain", bg: "bg-gradient-to-r from-green-500 to-gray-600", text: "text-gray-800" },
+    { name: "forest", bg: "bg-gradient-to-r from-emerald-400 to-green-600", text: "text-green-900" },
+    { name: "waterfall", bg: "bg-gradient-to-r from-cyan-400 to-blue-500", text: "text-cyan-900" },
+  ]
+
+  // Theme switching logic with smooth transitions
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTheme((prev) => {
+        const currentIndex = themes.findIndex((t) => t.name === prev)
+        const nextIndex = (currentIndex + 1) % themes.length
+        return themes[nextIndex].name
+      })
+    }, 10000) // Switch every 10 seconds
+    return () => clearInterval(interval)
+  }, [])
 
   // Define your application form steps and questions
   const formSteps = [
@@ -71,8 +92,8 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
 
   // Focus input when currentStep changes and bot asks a new question
   useEffect(() => {
-    if (!isTyping && currentStep < formSteps.length -1 && inputRef.current && isOpen) {
-        inputRef.current.focus();
+    if (!isTyping && currentStep < formSteps.length - 1 && inputRef.current && isOpen) {
+      inputRef.current.focus();
     }
   }, [currentStep, isTyping, formSteps.length, isOpen]);
 
@@ -208,10 +229,15 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
     setCurrentStep(formSteps.length);
   };
 
+  // Get current theme styles
+  const currentTheme = themes.find((t) => t.name === theme)
+  const backgroundTheme = currentTheme.bg
+  const textTheme = currentTheme.text
+
   const renderInputArea = () => {
     if (submissionSuccess) {
       return (
-        <div className="text-center text-sm text-gray-600 py-2">
+        <div className={`text-center text-sm text-gray-600 py-2 ${textTheme} transition-colors duration-1000 ease-in-out`}>
           Application completed.
         </div>
       );
@@ -220,7 +246,7 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
     const step = formSteps[currentStep];
 
     if (!step) {
-        return null;
+      return null;
     }
 
     if (step.id === "confirm") {
@@ -229,7 +255,7 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
           <button
             onClick={handleConfirmSubmit}
             disabled={isSubmitting}
-            className="w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
+            className={`${backgroundTheme} text-white p-2 rounded-lg hover:bg-green-700 transition-colors duration-1000 ease-in-out disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center w-full`}
           >
             {isSubmitting ? (
               <>
@@ -253,7 +279,7 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={step.placeholder || "Type your answer..."}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm resize-none h-16"
+              className={`flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm resize-none h-16 ${textTheme} transition-colors duration-1000 ease-in-out`}
             />
           ) : (
             <input
@@ -263,19 +289,19 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={step.placeholder || "Type your answer..."}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+              className={`flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm ${textTheme} transition-colors duration-1000 ease-in-out`}
             />
           )}
           <button
             onClick={handleSendMessage}
             disabled={isTyping || (!inputMessage.trim() && !step.optional)}
-            className="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className={`${backgroundTheme} text-white p-2 rounded-lg hover:bg-green-700 transition-colors duration-1000 ease-in-out disabled:bg-gray-300 disabled:cursor-not-allowed`}
           >
             <Send className="w-4 h-4" />
           </button>
         </div>
         {step.optional && (
-          <p className="text-xs text-gray-500 mt-1 text-right">
+          <p className={`text-xs text-gray-500 mt-1 text-right ${textTheme} transition-colors duration-1000 ease-in-out`}>
             Press Enter or Send to skip (optional)
           </p>
         )}
@@ -287,15 +313,15 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
     if (formSteps[currentStep]?.id === "confirm") {
       return (
         <div className="bg-gray-50 p-3 rounded-lg mt-2 text-sm">
-          <h4 className="font-semibold mb-2">Your Application Details:</h4>
+          <h4 className={`font-semibold mb-2 ${textTheme} transition-colors duration-1000 ease-in-out`}>Your Application Details:</h4>
           {Object.entries(formData).map(([key, value]) => (
-            <p key={key} className="mb-1">
+            <p key={key} className={`mb-1 ${textTheme} transition-colors duration-1000 ease-in-out`}>
               <span className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>{" "}
               {value || <span className="text-gray-500 italic">No response</span>}
             </p>
           ))}
           {Object.keys(formData).length === 0 && (
-             <p className="text-gray-500 italic">No information collected yet.</p>
+            <p className={`text-gray-500 italic ${textTheme} transition-colors duration-1000 ease-in-out`}>No information collected yet.</p>
           )}
         </div>
       );
@@ -309,7 +335,7 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
       {!isOpen && (
         <button
           onClick={onOpen}
-          className="fixed bottom-20 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition-colors duration-200 z-50"
+          className={`fixed bottom-20 right-6 ${backgroundTheme} text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition-colors duration-1000 ease-in-out z-50`}
           title="Apply for Tourism"
         >
           <FileText className="w-6 h-6" />
@@ -318,22 +344,22 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
 
       {/* Application Form Window */}
       {isOpen && (
-        <div ref={applicationBotRef} className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col z-50">
+        <div ref={applicationBotRef} className={`fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col z-50 transition-colors duration-1000 ease-in-out`}>
           {/* Header */}
-          <div className="bg-green-600 text-white p-4 rounded-t-xl flex items-center justify-between">
+          <div className={`${backgroundTheme} text-white p-4 rounded-t-xl flex items-center justify-between transition-colors duration-1000 ease-in-out`}>
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-medium">Application Form</h3>
-                <p className="text-xs text-green-100">Assistant • {currentStep < formSteps.length -1 ? `Step ${currentStep}/${formSteps.length - 2}` : "Review"}</p>
+                <p className={`text-xs text-green-100 ${textTheme} transition-colors duration-1000 ease-in-out`}>Assistant • {currentStep < formSteps.length - 1 ? `Step ${currentStep}/${formSteps.length - 2}` : "Review"}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
-                <button onClick={onClose} className="text-green-100 hover:text-white transition-colors">
-                  <X className="w-5 h-5" />
-                </button>
+              <button onClick={onClose} className="text-green-100 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
             </div>
           </div>
 
@@ -343,8 +369,8 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
               <div key={message.id} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-[80%] p-3 rounded-lg ${
-                    message.type === "user" ? "bg-green-600 text-white" : "bg-gray-100 text-gray-900"
-                  }`}
+                    message.type === "user" ? `${backgroundTheme} text-white` : "bg-gray-100 text-gray-900"
+                  } transition-colors duration-1000 ease-in-out`}
                 >
                   <div className="flex items-start space-x-2">
                     {message.type === "bot" && <FileText className="w-4 h-4 mt-1 text-green-600 flex-shrink-0" />}
@@ -392,7 +418,7 @@ const ApplicationBot = ({ isOpen, onClose, onOpen }) => {
           {/* Input Area */}
           {renderInputArea()}
 
-          <p className="text-xs text-gray-500 mt-2 text-center py-1">
+          <p className={`text-xs text-gray-500 mt-2 text-center py-1 ${textTheme} transition-colors duration-1000 ease-in-out`}>
             Jharkhand Tourism Application Assistant
           </p>
         </div>

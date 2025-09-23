@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -65,7 +64,8 @@ function App() {
         </main>
         <Footer />
 
-        {/* Render the application bot */}
+
+         {/* Render the application bot */}
         <ApplicationBot 
           isOpen={isApplicationBotOpen}
           onClose={handleCloseApplicationForm}
@@ -78,6 +78,7 @@ function App() {
           setIsOpen={setIsChatbotOpen}
           onOpenApplicationForm={handleOpenApplicationForm}
         />
+   
       </div>
     </Router>
   );
