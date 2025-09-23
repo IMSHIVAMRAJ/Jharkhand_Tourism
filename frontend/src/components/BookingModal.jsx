@@ -4,8 +4,9 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { X } from 'lucide-react';
 
+// CORRECTED FUNCTION
 const getAuthToken = () => {
-    return localStorage.getItem('tourist_token'); // Assumes token is stored after TOURIST login
+    return localStorage.getItem('token'); // Use the correct key 'token'
 };
 
 const BookingModal = ({ homestay, onClose }) => {
@@ -21,11 +22,21 @@ const BookingModal = ({ homestay, onClose }) => {
       return;
     }
 
+    // This logic formats the date correctly for the backend if a range is selected
+    let bookingDatesString = '';
+    if (data.bookingDate && data.bookingDate[0] && data.bookingDate[1]) {
+        const startDate = data.bookingDate[0].toLocaleDateString('en-CA'); // yyyy-mm-dd format
+        const endDate = data.bookingDate[1].toLocaleDateString('en-CA');
+        bookingDatesString = `${startDate} to ${endDate}`;
+    } else if (data.bookingDate && data.bookingDate[0]) {
+        bookingDatesString = data.bookingDate[0].toLocaleDateString('en-CA');
+    }
+
     const bookingPayload = {
       ...data,
       homestay: homestay._id,
       place: homestay.location,
-      bookingDates: data.bookingDate ? `${data.bookingDate[0].toLocaleDateString()} - ${data.bookingDate[1].toLocaleDateString()}` : new Date().toLocaleDateString(),
+      bookingDates: bookingDatesString, // Use the formatted string
     };
 
     try {
@@ -70,24 +81,24 @@ const BookingModal = ({ homestay, onClose }) => {
             <input type="number" {...register("adults", { required: true, min: 1 })} placeholder="Number of Adults" className="w-full p-2 border rounded" />
             
             <div>
-                <Controller
-                    control={control}
-                    name="bookingDate"
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                        <DatePicker
-                            placeholderText="Select Booking Dates"
-                            onChange={(date) => field.onChange(date)}
-                            selected={field.value?.[0]}
-                            selectsRange
-                            startDate={field.value?.[0]}
-                            endDate={field.value?.[1]}
-                            minDate={new Date()}
-                            className="w-full p-2 border rounded"
-                            dateFormat="yyyy/MM/dd"
-                        />
-                    )}
-                />
+              <Controller
+                control={control}
+                name="bookingDate"
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <DatePicker
+                    placeholderText="Select Booking Dates"
+                    onChange={(date) => field.onChange(date)}
+                    selected={field.value?.[0]}
+                    selectsRange
+                    startDate={field.value?.[0]}
+                    endDate={field.value?.[1]}
+                    minDate={new Date()}
+                    className="w-full p-2 border rounded"
+                    dateFormat="yyyy/MM/dd"
+                  />
+                )}
+              />
             </div>
           </div>
           

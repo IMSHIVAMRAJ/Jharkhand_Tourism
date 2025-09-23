@@ -20,6 +20,7 @@ import Chatbot from "./components/Chatbot";
 import './App.css';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
+import MainRoutes from './Routes/MainRoutes.jsx';
 
 // Ensure you have these components imported correctly if they are part of your project
 // import MainRoutes from './Routes/MainRoutes'; 
@@ -62,6 +63,7 @@ function App() {
             {/* Add other routes as needed */}
           </Routes>
         </main>
+        <MainRoutes />
         <Footer />
 
 
