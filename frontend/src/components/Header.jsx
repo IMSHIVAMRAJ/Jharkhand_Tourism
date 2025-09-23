@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu, X, ChevronDown, MapPin, Star, Search, User, Heart,
   Home, Mountain, ShoppingBag, Building, Images, FileText,
   UserPlus, Briefcase, Palette, LogIn, UserPlus as SignupIcon,
-  LogOut // Import the LogOut icon
+  LogOut, Sparkles // Added Sparkles icon for AI Explore
 } from 'lucide-react';
 
 const Header = () => {
@@ -13,15 +13,19 @@ const Header = () => {
   const [isApplyDropdownOpen, setIsApplyDropdownOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // New state for auth check
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const location = useLocation();
-  const navigate = useNavigate(); // Hook to redirect after logout
+  // Add refs for dropdown containers
+  const exploreDropdownRef = useRef(null);
+  const applyDropdownRef = useRef(null);
+  const profileDropdownRef = useRef(null);
 
-  // This hook checks if the user is logged in
+  const location = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
@@ -51,7 +55,26 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // This new function handles the logout process
+  // Add click outside effect
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (exploreDropdownRef.current && !exploreDropdownRef.current.contains(event.target)) {
+        setIsExploreDropdownOpen(false);
+      }
+      if (applyDropdownRef.current && !applyDropdownRef.current.contains(event.target)) {
+        setIsApplyDropdownOpen(false);
+      }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
@@ -69,9 +92,9 @@ const Header = () => {
   ];
 
   const applyOptions = [
-    { name: 'Become a Guide', path: '/apply-guide', icon: UserPlus, color: 'from-blue-500 to-indigo-500' },
-    { name: 'Register Homestay', path: '/apply-homestay', icon: Building, color: 'from-teal-500 to-emerald-500' },
-    { name: 'Sell Handicrafts', path: '/apply-handicraft', icon: Palette, color: 'from-orange-500 to-red-500' }
+    { name: ' Guide', path: '/apply-guide', icon: UserPlus, color: 'from-blue-500 to-indigo-500' },
+    { name: 'Homestay', path: '/apply-homestay', icon: Building, color: 'from-teal-500 to-emerald-500' },
+    { name: 'Handicrafts', path: '/apply-handicraft', icon: Palette, color: 'from-orange-500 to-red-500' }
   ];
 
   const profileOptions = [
@@ -117,7 +140,7 @@ const Header = () => {
               <div className="absolute -inset-2 bg-green-300/20 rounded-2xl blur-md group-hover:blur-lg transition-all duration-300 -z-10"></div>
             </div>
             <div className="flex flex-col">
-              <span className="text-3xl font-black bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent">Jharkhand Tourism</span>
+              <span className="text-2xl font-black bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent">Jharkhand Tourism</span>
               <span className="text-xs text-gray-500 font-medium tracking-wider">Land of Forests & Traditions</span>
             </div>
           </Link>
@@ -126,7 +149,13 @@ const Header = () => {
               {navItems.map((item) => {
                 const IconComponent = item.icon;
                 return (
-                  <div key={item.name} className="relative group" onMouseEnter={item.dropdownType === 'explore' ? handleExploreMouseEnter : item.dropdownType === 'apply' ? handleApplyMouseEnter : undefined} onMouseLeave={item.dropdownType === 'explore' ? handleExploreMouseLeave : item.dropdownType === 'apply' ? handleApplyMouseLeave : undefined}>
+                  <div 
+                    key={item.name} 
+                    className="relative group" 
+                    ref={item.dropdownType === 'explore' ? exploreDropdownRef : item.dropdownType === 'apply' ? applyDropdownRef : undefined}
+                    onMouseEnter={item.dropdownType === 'explore' ? handleExploreMouseEnter : item.dropdownType === 'apply' ? handleApplyMouseEnter : undefined} 
+                    onMouseLeave={item.dropdownType === 'explore' ? handleExploreMouseLeave : item.dropdownType === 'apply' ? handleApplyMouseLeave : undefined}
+                  >
                     {item.hasDropdown ? (
                       <div className="flex items-center">
                         <div className={`px-2 m-2 py-4 rounded-2xl text-sm font-semibold cursor-pointer transition-all duration-500 flex items-center space-x-3 relative ${isActive(item.path) ? 'text-green-700 bg-green-100/80 shadow-inner' : 'text-gray-700 hover:text-green-800 hover:bg-white/80'} group-hover:scale-105 group-hover:shadow-2xl`}>
@@ -137,9 +166,15 @@ const Header = () => {
                         </div>
                         {item.dropdownType === 'explore' && isExploreDropdownOpen && (
                           <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-[900px] bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl border border-green-100/50 py-6 z-10 max-h-96 overflow-y-auto animate-fade-in-down">
-                            <div className="px-8 pb-4 border-b border-green-100/50">
-                              <h3 className="text-2xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-2">Explore Destinations</h3>
-                              <p className="text-sm text-gray-600 flex items-center"><span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>Discover the breathtaking beauty of Jharkhand</p>
+                            <div className="px-8 pb-4 border-b border-green-100/50 flex justify-between items-center">
+                              <div>
+                                <h3 className="text-2xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-2">Explore Destinations</h3>
+                                <p className="text-sm text-gray-600 flex items-center"><span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>Discover the breathtaking beauty of Jharkhand</p>
+                              </div>
+                              <Link to="/ai-explore" onClick={handleDropdownItemClick} className="group flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-2xl hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                <Sparkles className="w-4 h-4" />
+                                <span className="text-sm font-semibold">AI Explore</span>
+                              </Link>
                             </div>
                             <div className="grid grid-cols-2 gap-4 p-6">
                               {loading ? (<div className="col-span-2 text-center py-8"><div className="inline-flex items-center space-x-2 text-green-600"><div className="w-4 h-4 bg-green-400 rounded-full animate-bounce"></div><div className="w-4 h-4 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div><div className="w-4 h-4 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div></div></div>) : (
@@ -159,7 +194,7 @@ const Header = () => {
                         )}
                         {item.dropdownType === 'apply' && isApplyDropdownOpen && (
                           <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-[200px] bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl border border-green-100/50 z-10 animate-fade-in-down">
-                            <div className="space-y-3 p-6">{applyOptions.map((option) => {const IconComponent = option.icon;return (<Link key={option.name} to={option.path} onClick={handleDropdownItemClick} className="group relative bg-gradient-to-br from-white to-green-50 rounded-2xl p-4 hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-green-100/50 overflow-hidden block"><div className="absolute inset-0 bg-gradient-to-br from-green-500/0 to-green-600/0 group-hover:from-green-500/5 group-hover:to-green-600/10 transition-all duration-500"></div><div className="flex items-center space-x-4 relative z-10"><div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${option.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}><IconComponent className="w-7 h-7 text-white" /></div><div className="flex-1"><h4 className="font-bold text-lg text-gray-800 group-hover:text-green-700 transition-colors duration-300">{option.name}</h4></div><div className="text-green-500 group-hover:text-green-700 group-hover:translate-x-2 transition-all duration-300">→</div></div></Link>);})}</div>
+                            <div className="space-y-3 p-2">{applyOptions.map((option) => {const IconComponent = option.icon;return (<Link key={option.name} to={option.path} onClick={handleDropdownItemClick} className="group relative bg-gradient-to-br from-white to-green-50 rounded-2xl p-4 hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-green-100/50 overflow-hidden block"><div className="absolute inset-0 bg-gradient-to-br from-green-500/0 to-green-600/0 group-hover:from-green-500/5 group-hover:to-green-600/10 transition-all duration-500"></div><div className="flex items-center space-x-4 relative z-10"><div className={`w-2 h-2 rounded-xl bg-gradient-to-br ${option.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}><IconComponent className="w-7 h-7 text-white" /></div><div className="flex-1"><h4 className="font-bold text-lg text-gray-800 group-hover:text-green-700 transition-colors duration-300">{option.name}</h4></div><div className="text-green-500 group-hover:text-green-700 group-hover:translate-x-2 transition-all duration-300">→</div></div></Link>);})}</div>
                           </div>
                         )}
                       </div>
@@ -174,7 +209,7 @@ const Header = () => {
                 );
               })}
             </nav>
-            <div className="relative group ml-4" onMouseEnter={handleProfileMouseEnter} onMouseLeave={handleProfileMouseLeave}>
+            <div className="relative group ml-4" ref={profileDropdownRef} onMouseEnter={handleProfileMouseEnter} onMouseLeave={handleProfileMouseLeave}>
               <div className={`p-3 rounded-2xl cursor-pointer transition-all duration-300 flex items-center space-x-2 ${isProfileDropdownOpen ? 'bg-green-100/80' : 'hover:bg-green-100/50'}`}>
                 <User size={24} className="text-gray-700 group-hover:text-green-700" />
                 <ChevronDown className={`w-4 h-4 text-gray-700 transition-transform duration-300 ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
@@ -202,14 +237,13 @@ const Header = () => {
             <div className="p-6 space-y-2">
               {navItems.map((item) => {
                 const IconComponent = item.icon;
-                if (item.hasDropdown) { // Simplified check for ANY dropdown
+                if (item.hasDropdown) {
                   return (
                     <div key={item.name} className="space-y-2">
                       <div className="flex items-center space-x-4 p-4 rounded-2xl text-lg font-semibold text-gray-700 bg-green-50/50">
                         <IconComponent className="w-5 h-5" />
                         <span>{item.name}</span>
                       </div>
-                      {/* This section specifically handles the Apply options in mobile */}
                       {item.dropdownType === 'apply' && (
                         <div className="ml-4 space-y-1">
                           {applyOptions.map((option) => {
@@ -223,11 +257,14 @@ const Header = () => {
                           })}
                         </div>
                       )}
-                      {/* For Explore, you might want to link to the main page or list a few items */}
                       {item.dropdownType === 'explore' && (
                          <div className="ml-4 space-y-1">
                             <Link to="/explore" onClick={handleDropdownItemClick} className="flex items-center space-x-3 p-3 rounded-xl text-sm font-medium text-gray-600 hover:text-green-700 hover:bg-green-50/50 transition-all duration-300">
                                 <span>View All Destinations</span>
+                            </Link>
+                            <Link to="/ai-explore" onClick={handleDropdownItemClick} className="flex items-center space-x-3 p-3 rounded-xl text-sm font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50/50 transition-all duration-300">
+                                <Sparkles className="w-4 h-4" />
+                                <span>AI Explore</span>
                             </Link>
                          </div>
                       )}

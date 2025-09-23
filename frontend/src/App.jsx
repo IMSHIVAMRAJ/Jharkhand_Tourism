@@ -22,6 +22,7 @@ import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import MainRoutes from './Routes/MainRoutes.jsx';
 import KYCForm from './pages/KYCForm.jsx';
+import AIExplore from './pages/AIExplore.jsx';
 // Ensure you have these components imported correctly if they are part of your project
 // import MainRoutes from './Routes/MainRoutes'; 
 
@@ -61,6 +62,8 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/KYCFORM" element={<KYCForm />} />
+            <Route path="/ai-explore" element={<AIExplore />} />
+
 
             {/* Add other routes as needed */}
           </Routes>
