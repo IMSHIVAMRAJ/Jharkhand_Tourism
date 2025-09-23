@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Play, Heart, Share2, Download, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import galleryBg from '../assets/gallery-bg.jpg';
-import destination1 from '../assets/destination1.jpg';
-import destination2 from '../assets/destination2.jpg';
-import destination3 from '../assets/destination3.jpg';
 
+// Import Jharkhand-specific assets
+import galleryBg from '../assets/gallery-bg.jpg'; // You can replace this with a Jharkhand-specific background
+import netarhat from '../assets/destination1.jpg';
+import hundruFalls from '../assets/destination2.jpg';
+import baidyanathDham from '../assets/destination3.jpg';
+import palamauElephant from '../assets/destination4.jpg';
+import tribalfestival from '../assets/heroVideo.mp4';
+import ranchiNight from '../assets/destination5.jpg';
 
 const PhotoVideoGallery = () => {
   const [selectedMedia, setSelectedMedia] = useState(null);
@@ -14,86 +18,86 @@ const PhotoVideoGallery = () => {
     {
       id: 1,
       type: 'image',
-      src: destination1,
-      title: 'Mountain Landscape',
-      location: 'Himalayas, India'
+      src: netarhat,
+      title: 'Sunrise at Netarhat',
+      location: 'Netarhat, Jharkhand'
     },
     {
       id: 2,
-      type: 'image',
-      src: destination2,
-      title: 'Forest Trail',
-      location: 'Western Ghats, India'
+      type: 'video',
+      src: tribalfestival, // Replace with a local video file
+      title: 'Sarhul Festival',
+      location: 'Ranchi, Jharkhand'
     },
     {
       id: 3,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=600&h=400&fit=crop',
-      title: 'Tiger Portrait',
-      location: 'Ranthambore National Park'
+      src: hundruFalls,
+      title: 'Hundru Falls',
+      location: 'Ranchi, Jharkhand'
     },
     {
       id: 4,
-      type: 'video',
-      src: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&h=400&fit=crop',
-      title: 'Temple Architecture',
-      location: 'Rajasthan, India'
+      type: 'image',
+      src: baidyanathDham,
+      title: 'Baba Baidyanath Dham',
+      location: 'Deoghar, Jharkhand'
     },
     {
       id: 5,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
-      title: 'City Lights',
-      location: 'Mumbai, India'
+      src: ranchiNight,
+      title: 'Ranchi Cityscape at Night',
+      location: 'Ranchi, Jharkhand'
     },
     {
       id: 6,
       type: 'video',
-      src: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop',
-      title: 'Cultural Heritage',
-      location: 'Delhi, India'
+      src: 'https://www.example.com/jharkhand-wildlife.mp4', // Placeholder URL for a video
+      title: 'Wildlife of Betla National Park',
+      location: 'Latehar, Jharkhand'
     },
     {
       id: 7,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600&h=400&fit=crop',
-      title: 'Foundation Day',
-      location: 'Uttarakhand Tourism'
+      src: palamauElephant,
+      title: 'Palamau Tiger Reserve',
+      location: 'Palamau, Jharkhand'
     },
     {
       id: 8,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
-      title: 'Desert Sunset',
-      location: 'Rajasthan, India'
+      src: 'https://images.unsplash.com/photo-1598506072145-c43916053f3e?w=600&h=400&fit=crop', // Example from Unsplash
+      title: 'Tribal Art & Culture',
+      location: 'Jharkhand'
     },
     {
       id: 9,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600&h=400&fit=crop',
-      title: 'Wildlife Safari',
-      location: 'Jim Corbett National Park'
+      src: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600&h=400&fit=crop', // Example from Unsplash
+      title: 'Peaceful Trails',
+      location: 'Netarhat, Jharkhand'
     },
     {
       id: 10,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=600&h=400&fit=crop',
-      title: 'Incredible India',
-      location: 'Tourism Campaign'
+      src: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=600&h=400&fit=crop', // Example from Unsplash
+      title: 'Dalma Hills Trek',
+      location: 'Jamshedpur, Jharkhand'
     },
     {
       id: 11,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600&h=400&fit=crop',
-      title: 'Base Camp Trek',
-      location: 'Uttarakhand'
+      src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop', // Example from Unsplash
+      title: 'Scenic Vistas',
+      location: 'Jharkhand'
     },
     {
       id: 12,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600&h=400&fit=crop',
-      title: 'Ocean Waves',
-      location: 'Goa, India'
+      src: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600&h=400&fit=crop', // Example from Unsplash
+      title: 'Urban Life in Jamshedpur',
+      location: 'Jamshedpur, Jharkhand'
     }
   ];
 
@@ -133,7 +137,7 @@ const PhotoVideoGallery = () => {
             Photo & Video Gallery
           </h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Explore a collection of captivating moments from various destinations across India.
+            Explore a collection of captivating moments from various destinations across Jharkhand.
           </p>
         </div>
 
@@ -231,11 +235,19 @@ const PhotoVideoGallery = () => {
 
             {/* Media Content */}
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-              <img
-                src={selectedMedia.src}
-                alt={selectedMedia.title}
-                className="w-full h-auto max-h-[80vh] object-contain"
-              />
+              {selectedMedia.type === 'image' ? (
+                <img
+                  src={selectedMedia.src}
+                  alt={selectedMedia.title}
+                  className="w-full h-auto max-h-[80vh] object-contain"
+                />
+              ) : (
+                <video
+                  src={selectedMedia.src}
+                  controls
+                  className="w-full h-auto max-h-[80vh] object-contain"
+                />
+              )}
 
               {/* Media Info */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8">

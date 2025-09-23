@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Star, MapPin, Users, Calendar, ChevronLeft, ChevronRight, Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
+// import Header from './Header';
 import LatestGalleryHighlights from '../pages/LatestGalleryHighlights';
 import banner1 from "../assets/banner1.jpg";
 import banner2 from "../assets/banner2.jpg";
@@ -323,6 +324,8 @@ import SocialMedia from '../pages/FollowUs';
 const Home = () => {
   return (
     <div>
+      {/* <Header /> */}
+
       <HeroSection />
       <LatestUpdates />
       <LatestGalleryHighlights />

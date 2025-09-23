@@ -19,6 +19,8 @@ import GuideApplyForm from './pages/GuideApplyForm.jsx';
 import ApplicationBot from "./components/ApplicationBot";
 import Chatbot from "./components/Chatbot";
 import './App.css';
+import SignupPage from './pages/SignupPage';
+import LoginPage from './pages/LoginPage';
 
 // Ensure you have these components imported correctly if they are part of your project
 // import MainRoutes from './Routes/MainRoutes'; 
@@ -56,6 +58,9 @@ function App() {
             <Route path="/apply-guide" element={<GuideApplyForm />} />
             {/* The MainRoutes component was removed to avoid duplicate routing issues */}
             {/* You should manually add the routes from MainRoutes here if they are needed */}
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            {/* Add other routes as needed */}
           </Routes>
         </main>
         <Footer />

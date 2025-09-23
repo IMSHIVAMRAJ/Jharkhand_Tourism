@@ -7,6 +7,7 @@ import {
   Loader, 
   SlidersHorizontal 
 } from 'lucide-react';
+import homeStay from '../assets/homeStay.jpg'; // The image is correctly imported here.
 
 const Homestay = () => {
   const [homestays, setHomestays] = useState([]);
@@ -63,9 +64,10 @@ const Homestay = () => {
       {/* Hero Section */}
       <div 
         className="relative h-64 bg-cover bg-center"
-        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&h=400&fit=crop)' }}
+        // Corrected line: use the imported 'homeStay' variable
+        style={{ backgroundImage: `url(${homeStay})` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+        <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
           <div className="text-center text-white px-4">
             <h1 className="text-4xl font-bold mb-4">Find Your Perfect Homestay</h1>
             <p className="text-xl">Experience authentic local hospitality in beautiful locations</p>

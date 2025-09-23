@@ -8,6 +8,9 @@ import destination4 from '../assets/destination4.jpg';
 import destination5 from '../assets/destination5.jpg';
 import destination6 from '../assets/destination6.jpg';
 import destination7 from '../assets/destination7.jpg';
+import temple from '../assets/temple.png';
+import wildlife from '../assets/wildlife.jpg';
+
 
 
 const JharkhandGallery = () => {
@@ -19,7 +22,7 @@ const JharkhandGallery = () => {
   const images = [
     {
       id: 1,
-      src: 'https://images.unsplash.com/photo-1598282361139-813c0b05374e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      src: destination1,
       title: 'Hundru Falls',
       location: 'Ranchi',
       description: 'A spectacular 98-meter high waterfall cascading down from the Subarnarekha River, creating a mesmerizing natural wonder.',
@@ -30,7 +33,7 @@ const JharkhandGallery = () => {
     },
     {
       id: 2,
-      src: 'https://images.unsplash.com/photo-1598282361139-813c0b05374e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80',
+      src: destination2,
       title: 'Betla National Park',
       location: 'Latehar',
       description: 'Home to tigers, elephants, and diverse wildlife spread across 979 sq km of pristine forest landscape.',
@@ -41,7 +44,7 @@ const JharkhandGallery = () => {
     },
     {
       id: 3,
-      src: 'https://images.unsplash.com/photo-1598282361139-813c0b05374e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2088&q=80',
+      src: temple,
       title: 'Jagannath Temple',
       location: 'Ranchi',
       description: 'A magnificent temple complex inspired by the famous Puri Jagannath Temple, featuring traditional Kalinga architecture.',
@@ -52,7 +55,7 @@ const JharkhandGallery = () => {
     },
     {
       id: 4,
-      src: 'https://images.unsplash.com/photo-1598282361139-813c0b05374e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2112&q=80',
+      src: destination4,
       title: 'Patratu Valley',
       location: 'Ramgarh',
       description: 'A breathtaking valley offering panoramic views of rolling hills, perfect for sunrise and sunset photography.',
@@ -63,7 +66,7 @@ const JharkhandGallery = () => {
     },
     {
       id: 5,
-      src: 'https://images.unsplash.com/photo-1598282361139-813c0b05374e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+      src: destination5,
       title: 'Jonha Falls',
       location: 'Ranchi',
       description: 'Also known as Gautamdhara, this 43-meter waterfall is surrounded by dense forests and ancient caves.',
@@ -74,7 +77,7 @@ const JharkhandGallery = () => {
     },
     {
       id: 6,
-      src: 'https://images.unsplash.com/photo-1598282361139-813c0b05374e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+      src: wildlife,
       title: 'Dalma Wildlife Sanctuary',
       location: 'Jamshedpur',
       description: 'A 195 sq km sanctuary known for its elephant population and rich biodiversity in the Eastern Ghats.',
