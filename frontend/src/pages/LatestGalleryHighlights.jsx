@@ -19,13 +19,41 @@ const galleryItems = [
 const LatestGalleryHighlights = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showScroll, setShowScroll] = useState(false);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
+
+  const extendedItems = [...galleryItems, ...galleryItems, ...galleryItems]; // Triplicate for smoother loop
+
+  const visibleItems = 3; // Number of visible items on medium+ screens
+  const totalSlides = galleryItems.length;
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % galleryItems.length);
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex + 1;
+      if (newIndex >= totalSlides * 2) {
+        setTransitionEnabled(false);
+        setTimeout(() => {
+          setCurrentIndex(totalSlides);
+          setTransitionEnabled(true);
+        }, 0);
+        return newIndex;
+      }
+      return newIndex;
+    });
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + galleryItems.length) % galleryItems.length);
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex - 1;
+      if (newIndex < totalSlides) {
+        setTransitionEnabled(false);
+        setTimeout(() => {
+          setCurrentIndex(totalSlides * 2 - 1);
+          setTransitionEnabled(true);
+        }, 0);
+        return newIndex;
+      }
+      return newIndex;
+    });
   };
 
   const handleScrollToTop = () => {
@@ -46,9 +74,17 @@ const LatestGalleryHighlights = () => {
 
   // Auto slide every 5 seconds
   useEffect(() => {
-    const interval = setInterval(nextSlide, 5000);
+    const interval = setInterval(nextSlide, 3000);
     return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, []);
+
+  const getTransform = () => {
+    return `translateX(-${(currentIndex * 100) / visibleItems}%)`;
+  };
+
+  const getTransition = () => {
+    return transitionEnabled ? 'transform 0.7s ease-in-out' : 'none';
+  };
 
   return (
     <section
@@ -74,11 +110,14 @@ const LatestGalleryHighlights = () => {
         {/* Carousel */}
         <div className="relative overflow-hidden">
           <div
-            className="flex transition-transform duration-700 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
+            className="flex"
+            style={{ 
+              transform: getTransform(),
+              transition: getTransition()
+            }}
           >
-            {galleryItems.map((item) => (
-              <div key={item.id} className="w-full md:w-1/3 flex-shrink-0 p-2">
+            {extendedItems.map((item, index) => (
+              <div key={`${item.id}-${index}`} className="w-full md:w-1/3 flex-shrink-0 p-2">
                 <div className="bg-white rounded-lg shadow-xl overflow-hidden">
                   <div className="relative">
                     <img
@@ -122,7 +161,7 @@ const LatestGalleryHighlights = () => {
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-white' : 'bg-gray-400'
+                index === (currentIndex % galleryItems.length) ? 'bg-white' : 'bg-gray-400'
               }`}
             ></button>
           ))}
@@ -143,7 +182,7 @@ const LatestGalleryHighlights = () => {
           onClick={handleScrollToTop}
           className="fixed bottom-8 right-8 bg-white text-green-600 p-4 rounded-full shadow-lg transition-opacity duration-300 opacity-100 hover:scale-110"
         >
-          <ArrowUp size={24} />
+          <ArrowUp size={24} fill="currentColor" />
         </button>
       )}
     </section>

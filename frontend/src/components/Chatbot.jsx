@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { SendHorizonal, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Spline from "@splinetool/react-spline";
 
 const languages = [
   { code: "en", name: "English" },
@@ -37,8 +38,29 @@ const Chatbot = () => {
   const [loading, setLoading] = useState(false);
   const [selectedLang, setSelectedLang] = useState("en");
   const [isListening, setIsListening] = useState(false);
+  const [theme, setTheme] = useState("water");
 
   const bottomRef = useRef(null);
+
+  // Define multiple themes for Jharkhand's natural beauty
+  const themes = [
+    { name: "water", bg: "bg-gradient-to-r from-blue-300 to-teal-200", text: "text-blue-800" },
+    { name: "mountain", bg: "bg-gradient-to-r from-green-500 to-gray-600", text: "text-gray-800" },
+    { name: "forest", bg: "bg-gradient-to-r from-emerald-400 to-green-600", text: "text-green-900" },
+    { name: "waterfall", bg: "bg-gradient-to-r from-cyan-400 to-blue-500", text: "text-cyan-900" },
+  ];
+
+  // Theme switching logic with smooth transitions
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTheme((prev) => {
+        const currentIndex = themes.findIndex((t) => t.name === prev);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        return themes[nextIndex].name;
+      });
+    }, 10000); // Switch every 10 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   const typeWriter = (fullText, cb) => {
     let index = 0;
@@ -136,14 +158,37 @@ const Chatbot = () => {
     recognition.onerror = () => setIsListening(false);
   };
 
+  // Get current theme styles
+  const currentTheme = themes.find((t) => t.name === theme);
+  const backgroundTheme = currentTheme.bg;
+  const textTheme = currentTheme.text;
+
   return (
     <>
+      {/* Spline Animation */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-[5%] left-6 w-[80%] h-[85%] hidden sm:block z-40 overflow-hidden"
+          >
+            <Spline
+              scene="https://prod.spline.design/3bfsCgZ8fIidsmH6/scene.splinecode"
+              style={{ width: "100%", height: "100%", position: "relative", top: "20%", left: "-40%" }} // Crop bottom 10%
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Toggle Button */}
       <motion.button
         whileTap={{ scale: 0.9 }}
         whileHover={{ scale: 1.1 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-4 right-4 p-4 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-full shadow-xl z-50"
+        className={`fixed bottom-4 right-4 p-4 ${backgroundTheme} text-white rounded-full shadow-xl z-50 transition-colors duration-1000 ease-in-out`}
       >
         <MessageCircle className="w-6 h-6" />
       </motion.button>
@@ -156,15 +201,15 @@ const Chatbot = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-20 right-4 w-[90%] sm:w-96 h-[70vh] bg-gradient-to-r from-blue-300 to-pink-300 rounded-xl shadow-2xl flex flex-col overflow-hidden z-40 border-2 border-blue-500"
+            className={`fixed bottom-20 right-4 w-[68%] sm:w-[27.2rem] h-[60vh] ${backgroundTheme} rounded-xl shadow-2xl flex flex-col overflow-hidden z-40 border-2 border-blue-500 transition-colors duration-1000 ease-in-out`}
           >
             {/* Header */}
-            <div className="p-4 bg-gradient-to-r from-blue-500 to-pink-500 text-white font-bold text-lg flex justify-between">
+            <div className={`p-4 ${backgroundTheme} text-white font-bold text-lg flex justify-between ${textTheme} transition-colors duration-1000 ease-in-out`}>
               <span>TravelMitra</span>
               <select
                 value={selectedLang}
                 onChange={(e) => setSelectedLang(e.target.value)}
-                className="text-black rounded px-1 text-sm"
+                className={`text-black rounded px-1 text-sm ${textTheme} transition-colors duration-1000 ease-in-out`}
               >
                 {languages.map((lang) => (
                   <option key={lang.code} value={lang.code}>
@@ -175,27 +220,33 @@ const Chatbot = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            <div className={`flex-1 overflow-y-auto p-4 space-y-3 ${textTheme} transition-colors duration-1000 ease-in-out`}>
               {messages.map((msg, idx) => (
-                <motion.div
+                <div
                   key={idx}
-                  initial={{ opacity: 0, x: msg.from === "user" ? 50 : -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={`max-w-[80%] px-4 py-2 rounded-lg text-sm break-words ${
-                    msg.from === "user"
-                      ? "bg-white text-black self-end text-right ml-auto"
-                      : "bg-gradient-to-r from-pink-500 to-blue-500 text-white self-start"
+                  className={`flex ${
+                    msg.from === "user" ? "justify-end" : "justify-start"
                   }`}
-                  style={{ whiteSpace: "pre-wrap" }}
-                  dangerouslySetInnerHTML={{
-                    __html: (msg?.text ? String(msg.text) : "").replace(/\n/g, "<br>"),
-                  }}
-                />
+                >
+                  <motion.div
+                    initial={{ opacity: 0, x: msg.from === "user" ? 50 : -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={`inline-block px-4 py-2 rounded-lg text-sm break-words ${
+                      msg.from === "user"
+                        ? "bg-white text-black shadow-md"
+                        : `${backgroundTheme} text-white shadow-md`
+                    } max-w-[80%] min-w-[fit-content] transition-colors duration-1000 ease-in-out`}
+                    style={{ whiteSpace: "pre-wrap" }}
+                    dangerouslySetInnerHTML={{
+                      __html: (msg?.text ? String(msg.text) : "").replace(/\n/g, "<br>"),
+                    }}
+                  />
+                </div>
               ))}
 
               {loading && (
-                <div className="text-sm text-gray-600 animate-pulse">
+                <div className={`text-sm animate-pulse ${textTheme} transition-colors duration-1000 ease-in-out`}>
                   TravelMitra is typing...
                 </div>
               )}
@@ -203,28 +254,28 @@ const Chatbot = () => {
             </div>
 
             {/* Input */}
-            <div className="p-3 border-t border-blue-500 bg-gradient-to-r from-blue-100 to-pink-100 flex items-center gap-2">
+            <div className={`p-3 border-t border-blue-500 bg-gradient-to-r from-blue-100 to-teal-100 flex items-center gap-2 transition-colors duration-1000 ease-in-out ${textTheme}`}>
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 type="text"
                 placeholder="Type or speak your query..."
-                className="flex-1 px-4 py-2 rounded-l-lg bg-white text-sm outline-none placeholder:text-gray-600"
+                className={`flex-1 px-4 py-2 rounded-l-lg bg-white text-sm outline-none placeholder:text-gray-600 ${textTheme} transition-colors duration-1000 ease-in-out`}
               />
               <button
                 onClick={handleVoice}
                 className={`px-3 py-2 rounded-lg ${
                   isListening
                     ? "bg-red-500 text-white"
-                    : "bg-gradient-to-r from-pink-500 to-blue-500 text-white"
-                }`}
+                    : `${backgroundTheme} text-white`
+                } transition-colors duration-1000 ease-in-out`}
               >
                 🎤
               </button>
               <button
                 onClick={handleSend}
-                className="px-4 py-2 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-r-lg hover:from-pink-600 hover:to-blue-600"
+                className={`${backgroundTheme} text-white px-4 py-2 rounded-r-lg hover:from-blue-500 hover:to-teal-500 transition-colors duration-1000 ease-in-out`}
               >
                 <SendHorizonal size={18} />
               </button>
