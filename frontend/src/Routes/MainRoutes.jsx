@@ -18,7 +18,7 @@ const MainRoutes = () => {
     <div>
       <Routes>
 
-        <Route path='/admin' element={<Login />} />
+        <Route path='/adminlogin' element={<Login />} />
         
         <Route path='/dashBoard' element= {<Dashboard/>} >
     <Route path="tourist" element={<TouristComponent />} />
